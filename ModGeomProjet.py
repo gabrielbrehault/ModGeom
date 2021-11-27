@@ -166,19 +166,20 @@ def WhatAreMoMn(Polygon,c):
     mnm1 = (1-c) / 2 * (Pn - Pnm2)
     Pt0 = P1 - m1
     Ptn = Pnm1 + mnm1
-    while Norm(Pt-P0) > Norm(m1):
+    while Norm(Pt0-P0) > Norm(m1):
         Pt0 -= 0.01 * (P1-P0)
     while Norm(Ptn-Pn) > Norm(mnm1):
         Ptn += 0.01 * (Pn - Pnm1)
     return Pt0-P0, Ptn - Pn
 
 def PlotHermiteCurve(Polygon):
-    c = WhatIsC()
+    # c = WhatIsC()
+    c = 0.2
     # m0, mn = WhatAreMoMn(Polygon, c)
     m0 = [3, 3]
     mn = [7, 7]
     N = len(Polygon[0, :])-1
-    t = np.linspace(0,1,10)
+    t = np.linspace(0,1,500)
     # Hermi = Hermite(N, t, m0, mn, c, Polygon)
     # Spline = Polygon @ Hermi
     Spline = Hermite(N, t, m0, mn, c, Polygon)
@@ -197,20 +198,20 @@ def Mk_List(N, m0, mn, c, Polygon):
 
     for i in range(1, N):
         Liste[0, i] = (1-c)*(Polygon[0, i+1] - Polygon[0, i-1])/2
-        Liste[0, i] = (1-c)*(Polygon[1, i+1] - Polygon[1, i-1])/2
+        Liste[1, i] = (1-c)*(Polygon[1, i+1] - Polygon[1, i-1])/2
     return Liste
 
 
 def Hermite(N, T, m0, mn, c, Polygon):
     
     mk_list = Mk_List(N, m0, mn, c, Polygon)
-    Hrmt = np.zeros((2, (N+1)*T.size))
+    Hrmt = np.zeros((2, N*T.size))
 
     for i in range(N):
-        for t in range (T.size + 1):
+        for k in range (T.size):
             
-            Hrmt[0, i*T.size + t] = (Polygon[0, i])*((1 - t)**2)*(1 + 2*t) + (Polygon[0, i+1])*(t**2)*(3 - 2*t) + (mk_list[0, i])*t*((1 - t)**2) + (mk_list[0, i+1])*(-(t**2)*(1-t))
-            Hrmt[1, i*T.size + t] = (Polygon[1, i])*((1 - t)**2)*(1 + 2*t) + (Polygon[1, i+1])*(t**2)*(3 - 2*t) + (mk_list[1, i])*t*((1 - t)**2) + (mk_list[1, i+1])*(-(t**2)*(1-t))
+            Hrmt[0, i*T.size + k] =  (Polygon[0, i])*((1 - T[k])**2)*(1 + 2*T[k]) + (Polygon[0, i+1])*(T[k]**2)*(3 - 2*T[k]) + (mk_list[0, i])*T[k]*((1 - T[k])**2) + (mk_list[0, i+1])*(-(T[k]**2)*(1-T[k]))
+            Hrmt[1, i*T.size + k] =  (Polygon[1, i])*((1 - T[k])**2)*(1 + 2*T[k]) + (Polygon[1, i+1])*(T[k]**2)*(3 - 2*T[k]) + (mk_list[1, i])*T[k]*((1 - T[k])**2) + (mk_list[1, i+1])*(-(T[k]**2)*(1-T[k]))
 
     return Hrmt
 
