@@ -136,9 +136,9 @@ def WhatAreMoMn(Polygon):
 
 def PlotHermiteCurve(Polygon):
     c = WhatIsC()
-    # m0, mn = WhatAreMoMn(Polygon)
-    m0 = 0.2
-    mn = 0.2
+    # m0, mn = WhatAreMoMn(Polygon, c)
+    m0 = [3, 3]
+    mn = [7, 7]
     N = len(Polygon[0, :])-1
     t = np.linspace(0,1,500)
     # Hermi = Hermite(N, t, m0, mn, c, Polygon)
@@ -149,41 +149,32 @@ def PlotHermiteCurve(Polygon):
     plt.draw()
     return
 
-def Bernstein(N,t):
-    BNt = np.zeros((N+1, t.size))
-    for i in range(N+1):
-         BNt[i, :] = (nchoosek(N, i)*(t**i)*(1-t)**(N-i) )  
-    return BNt
+
+def Mk_List(N, m0, mn, c, Polygon):
+    Liste = np.zeros((2, N+1))
+    Liste[0, 0] = m0[0]
+    Liste[1, 0] = m0[1]
+    Liste[0, N] = mn[0]
+    Liste[1, N] = mn[1]
+
+    for i in range(1, N):
+        Liste[0, i] = (1-c)*(Polygon[0, i+1] - Polygon[0, i-1])/2
+        Liste[0, i] = (1-c)*(Polygon[1, i+1] - Polygon[1, i-1])/2
+    return Liste
 
 
 def Hermite(N, T, m0, mn, c, Polygon):
-    Hrmt = np.zeros((2, T.size))
-    for t in range(T.size + 1):
-            if (T[t]*N < 1):
-                Hrmt[0, t] = Polygon[0, 0]*((1-t)**3) + (Polygon[0, 0] + (1/3)*m0)*3*t*((1-t)**2) + (Polygon[0, 1] - (1/3)*Mk(Polygon[0, 0], Polygon[0, 2], c))*3*(1-t)*(t**2) + Polygon[0, 1]*(t**3) 
-                Hrmt[1, t] = Polygon[1, 0]*((1-t)**3) + (Polygon[1, 0] + (1/3)*m0)*3*t*((1-t)**2) + (Polygon[1, 1] - (1/3)*Mk(Polygon[1, 0], Polygon[1, 2], c))*3*(1-t)*(t**2) + Polygon[1, 1]*(t**3)
-                next
-            break
-    for i in range(N-2):
-        for t in range(T.size + 1):
-            if (i <= T[t]*N < i+1):
-                print("LALA\n")
-                Hrmt[0, t] = (Polygon[0, i+1]*((1-t)**3) + (Polygon[0, i+1] + (1/3)*Mk(Polygon[0, i], Polygon[0, i+2], c))*3*t*((1-t)**2) 
-                            + (Polygon[0, i+2] - (1/3)*Mk(Polygon[0, i+1], Polygon[0, i+3], c))*3*(1-t)*(t**2) + Polygon[0, i+2]*3*(t**3) )
-                Hrmt[1, t] = (Polygon[1, i+1]*((1-t)**3) + (Polygon[1, i+1] + (1/3)*Mk(Polygon[1, i], Polygon[1, i+2], c))*3*t*((1-t)**2) 
-                            + (Polygon[1, i+2] - (1/3)*Mk(Polygon[1, i+1], Polygon[1, i+3], c))*3*(1-t)*(t**2) + Polygon[1, i+2]*3*(t**3) )
-            if (T[t]*N >= i+1):
-                break
+    
+    mk_list = Mk_List(N, m0, mn, c, Polygon)
+    Hrmt = np.zeros((2, (N+1)*T.size))
+
+    for i in range(N):
+        for t in range (T.size + 1):
+            
+            Hrmt[0, i*500+t] = (Polygon[0, i])*((1 - t)**2)*(1 + 2*t) + (Polygon[0, i+1])*(t**2)*(3 - 2*t) + (mk_list[0, i])*t*((1 - t)**2) + (mk_list[0, i+1])*(-(t**2))*(1-t)
+            Hrmt[1, i*500+t] = (Polygon[1, i])*((1 - t)**2)*(1 + 2*t) + (Polygon[1, i+1])*(t**2)*(3 - 2*t) + (mk_list[1, i])*t*((1 - t)**2) + (mk_list[1, i+1])*(-(t**2))*(1-t)
 
     return Hrmt
-
-def Mk(pk_moins_1, pk_plus_1, c):
-    return (1 - c)*(pk_plus_1 - pk_moins_1)
-
-
-
-
-
 
 
 
