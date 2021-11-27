@@ -124,15 +124,53 @@ def WhatIsC():
     return float(input("Vous choisissez c = "))
 
 
-def WhatAreMoMn(Polygon):
-    m0 = np.zeros((2, 1))
-    mn = np.zeros((2, 1))
+def Norm(vect):
+    return vect[0]**2 + vect[1]**2
+
+
+def WhatAreMoMn(Polygon,c):
+    if Polygon.shape[1] <= 1:
+        return np.array((1,1)),np.array((1,1))
+    if Polygon.shape[1] == 2:
+        m0 = Polygon[:,1] - Polygon[:,0]
+        mn = Polygon[:,1] - Polygon[:,0]
+        return m0, mn
     choice = input('Voulez-vous choisir les M0 et Mn ? (Non/oui) : ')
     if choice.lower() == 'oui':
-        #ecire des trucs intelligen
+        print("Attention !!! Vos deux prochains clics sont importants !!!")
+        print("Votre 1er lieu de clic sera l'extrémité d'un vecteur partant de votre P0")
+        print("Ce vecteur sera la tangente en P0 de la courbe")
+        print("Votre second clic ferra presque la même chose mais en Pn")
+        nbr_pt = 0
+        coord = 0
+        while coord != [] or nbr_pt != 2:
+            coord = plt.ginput(1, mouse_add=1, mouse_stop=3, mouse_pop=2)
+            if coord != []:
+                plt.draw()
+                xx = coord[0][0]
+                yy = coord[0][1]
+                points.set_xdata(np.append(points.get_xdata(), xx))
+                points.set_ydata(np.append(points.get_ydata(), yy))
+                x = np.append(x, xx)
+                y = np.append(y, yy)
+                poly.set_xdata(points.get_xdata())
+                poly.set_ydata(points.get_ydata())
         return m0, mn
-    #eciree des quetru intilleierz aehgj
-    return m0, mn
+    P0 = Polygon[:,0]
+    P1 = Polygon[:,1]
+    P2 = Polygon[:,2]
+    Pn = Polygon[:,-1]
+    Pnm1 = Polygon[:,-2]
+    Pnm2 = Polygon[:,-3]
+    m1 = (1-c) / 2 * (P2 - P0)
+    mnm1 = (1-c) / 2 * (Pn - Pnm2)
+    Pt0 = P1 - m1
+    Ptn = Pnm1 + mnm1
+    while Norm(Pt-P0) > Norm(m1):
+        Pt0 -= 0.01 * (P1-P0)
+    while Norm(Ptn-Pn) > Norm(mnm1):
+        Ptn += 0.01 * (Pn - Pnm1)
+    return Pt0-P0, Ptn - Pn
 
 def PlotHermiteCurve(Polygon):
     c = WhatIsC()
