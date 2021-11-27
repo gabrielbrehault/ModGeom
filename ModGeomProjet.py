@@ -175,15 +175,12 @@ def WhatAreMoMn(Polygon,c):
 
 
 def PlotHermiteCurve(Polygon):
-    # c = WhatIsC()
-    c = 0.2
-    # m0, mn = WhatAreMoMn(Polygon, c)
-    m0 = [3, 3]
-    mn = [7, 7]
+    c = WhatIsC()
+    m0, mn = WhatAreMoMn(Polygon, c)
+
     N = len(Polygon[0, :])-1
     t = np.linspace(0,1,500)
-    # Hermi = Hermite(N, t, m0, mn, c, Polygon)
-    # Spline = Polygon @ Hermi
+
     Spline = Hermite(N, t, m0, mn, c, Polygon)
     curve.set_xdata(Spline[0,:])
     curve.set_ydata(Spline[1,:])
