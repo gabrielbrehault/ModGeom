@@ -129,33 +129,34 @@ def Norm(vect):
 
 
 def WhatAreMoMn(Polygon,c):
+    # Cas k
     if Polygon.shape[1] <= 1:
         return np.array((1,1)),np.array((1,1))
     if Polygon.shape[1] == 2:
         m0 = Polygon[:,1] - Polygon[:,0]
         mn = Polygon[:,1] - Polygon[:,0]
         return m0, mn
-    choice = input('Voulez-vous choisir les M0 et Mn ? (Non/oui) : ')
+    choice = input('Voulez-vous choisir m0 et mn ? (Non/oui) : ')
     if choice.lower() == 'oui':
+        # Cas où on choisit m0 et mn
         print("Attention !!! Vos deux prochains clics sont importants !!!")
-        print("Votre 1er lieu de clic sera l'extrémité d'un vecteur partant de votre P0")
+        print("Votre 1er lieu de clic sera le bout d'un vecteur partant de votre P0")
         print("Ce vecteur sera la tangente en P0 de la courbe")
-        print("Votre second clic ferra presque la même chose mais en Pn")
-        nbr_pt = 0
-        coord = 0
-        while coord != [] or nbr_pt != 2:
+        print("Votre second clic fera presque la même chose mais en Pn")
+        coord = []
+        while coord == []:
+            print("Merci de rentrer m0")
             coord = plt.ginput(1, mouse_add=1, mouse_stop=3, mouse_pop=2)
-            if coord != []:
-                plt.draw()
-                xx = coord[0][0]
-                yy = coord[0][1]
-                points.set_xdata(np.append(points.get_xdata(), xx))
-                points.set_ydata(np.append(points.get_ydata(), yy))
-                x = np.append(x, xx)
-                y = np.append(y, yy)
-                poly.set_xdata(points.get_xdata())
-                poly.set_ydata(points.get_ydata())
-        return m0, mn
+        m0x = coord[0][0]
+        m0y = coord[0][1]
+        coord = []
+        while coord == []:
+            print("Merci de rentrer mn")
+            coord = plt.ginput(1, mouse_add=1, mouse_stop=3, mouse_pop=2)
+        mnx = coord[0][0]
+        mny = coord[0][1]
+        return np.array((m0x,m0y)), np.array((mnx,mny))
+    # Cas automatique
     P0 = Polygon[:,0]
     P1 = Polygon[:,1]
     P2 = Polygon[:,2]
@@ -166,11 +167,12 @@ def WhatAreMoMn(Polygon,c):
     mnm1 = (1-c) / 2 * (Pn - Pnm2)
     Pt0 = P1 - m1
     Ptn = Pnm1 + mnm1
-    while Norm(Pt-P0) > Norm(m1):
+    while Norm(Pt0-P0) > Norm(m1):
         Pt0 -= 0.01 * (P1-P0)
     while Norm(Ptn-Pn) > Norm(mnm1):
         Ptn += 0.01 * (Pn - Pnm1)
-    return Pt0-P0, Ptn - Pn
+    return Pt0-P0, Pn-Ptn
+
 
 def PlotHermiteCurve(Polygon):
     c = WhatIsC()
