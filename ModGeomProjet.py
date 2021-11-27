@@ -136,12 +136,14 @@ def WhatAreMoMn(Polygon):
 
 def PlotHermiteCurve(Polygon):
     c = WhatIsC()
-    m0, mn = WhatAreMoMn(Polygon)
-
+    # m0, mn = WhatAreMoMn(Polygon)
+    m0 = 0.2
+    mn = 0.2
     N = len(Polygon[0, :])-1
     t = np.linspace(0,1,500)
-    Hermi = Hermite(N, t, m0, mn, c, Polygon)
-    Spline = Polygon @ Hermi
+    # Hermi = Hermite(N, t, m0, mn, c, Polygon)
+    # Spline = Polygon @ Hermi
+    Spline = Hermite(N, t, m0, mn, c, Polygon)
     curve.set_xdata(Spline[0,:])
     curve.set_ydata(Spline[1,:])
     plt.draw()
@@ -154,12 +156,26 @@ def Bernstein(N,t):
     return BNt
 
 
-def Hermite(N, t, m0, mn, c, Polygon):
-    Hrmt = np.zeros((N+1, t.size))
-    Hrmt[0, :] = Polygon[0]*((1-t)**3) + (Polygon[0] + (1/3)*m0)*3*t*((1-t)**2) + (Polygon[1] - (1/3)*Mk(Polygon[0], Polygon[2], c))*3*(1-t)*(t**2) + Polygon[1]*(t**3) 
-    for i in range(N-1):
-        Hrmt[i, :] = Polygon[i+1]*((1-t)**3) + (Polygon[i+1] + (1/3)*Mk(Polygon[i]))*3*t*((1-t)**2) + 
+def Hermite(N, T, m0, mn, c, Polygon):
+    Hrmt = np.zeros((2, T.size))
+    for t in range(T.size + 1):
+            if (T[t]*N < 1):
+                Hrmt[0, t] = Polygon[0, 0]*((1-t)**3) + (Polygon[0, 0] + (1/3)*m0)*3*t*((1-t)**2) + (Polygon[0, 1] - (1/3)*Mk(Polygon[0, 0], Polygon[0, 2], c))*3*(1-t)*(t**2) + Polygon[0, 1]*(t**3) 
+                Hrmt[1, t] = Polygon[1, 0]*((1-t)**3) + (Polygon[1, 0] + (1/3)*m0)*3*t*((1-t)**2) + (Polygon[1, 1] - (1/3)*Mk(Polygon[1, 0], Polygon[1, 2], c))*3*(1-t)*(t**2) + Polygon[1, 1]*(t**3)
+                next
+            break
+    for i in range(N-2):
+        for t in range(T.size + 1):
+            if (i <= T[t]*N < i+1):
+                print("LALA\n")
+                Hrmt[0, t] = (Polygon[0, i+1]*((1-t)**3) + (Polygon[0, i+1] + (1/3)*Mk(Polygon[0, i], Polygon[0, i+2], c))*3*t*((1-t)**2) 
+                            + (Polygon[0, i+2] - (1/3)*Mk(Polygon[0, i+1], Polygon[0, i+3], c))*3*(1-t)*(t**2) + Polygon[0, i+2]*3*(t**3) )
+                Hrmt[1, t] = (Polygon[1, i+1]*((1-t)**3) + (Polygon[1, i+1] + (1/3)*Mk(Polygon[1, i], Polygon[1, i+2], c))*3*t*((1-t)**2) 
+                            + (Polygon[1, i+2] - (1/3)*Mk(Polygon[1, i+1], Polygon[1, i+3], c))*3*(1-t)*(t**2) + Polygon[1, i+2]*3*(t**3) )
+            if (T[t]*N >= i+1):
+                break
 
+    return Hrmt
 
 def Mk(pk_moins_1, pk_plus_1, c):
     return (1 - c)*(pk_plus_1 - pk_moins_1)
@@ -176,11 +192,11 @@ class Index(object):
 
     def addPoint(self, event):
         Poly = AcquisitionNvxPoints(minmax,'or',':r')
-        PlotBezierCurve(Poly)
+        PlotHermiteCurve(Poly)
         
     def removePoint(self, event):
         Poly = AcquisitionRMVPoints(minmax,'or',':r')
-        PlotBezierCurve(Poly)
+        PlotHermiteCurve(Poly)
 
 
 callback = Index()
