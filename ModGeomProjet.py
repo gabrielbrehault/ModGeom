@@ -180,7 +180,7 @@ def PlotHermiteCurve(Polygon):
     m0 = [3, 3]
     mn = [7, 7]
     N = len(Polygon[0, :])-1
-    t = np.linspace(0,1,500)
+    t = np.linspace(0,1,10)
     # Hermi = Hermite(N, t, m0, mn, c, Polygon)
     # Spline = Polygon @ Hermi
     Spline = Hermite(N, t, m0, mn, c, Polygon)
@@ -211,8 +211,8 @@ def Hermite(N, T, m0, mn, c, Polygon):
     for i in range(N):
         for t in range (T.size + 1):
             
-            Hrmt[0, i*500+t] = (Polygon[0, i])*((1 - t)**2)*(1 + 2*t) + (Polygon[0, i+1])*(t**2)*(3 - 2*t) + (mk_list[0, i])*t*((1 - t)**2) + (mk_list[0, i+1])*(-(t**2))*(1-t)
-            Hrmt[1, i*500+t] = (Polygon[1, i])*((1 - t)**2)*(1 + 2*t) + (Polygon[1, i+1])*(t**2)*(3 - 2*t) + (mk_list[1, i])*t*((1 - t)**2) + (mk_list[1, i+1])*(-(t**2))*(1-t)
+            Hrmt[0, i*T.size + t] = (Polygon[0, i])*((1 - t)**2)*(1 + 2*t) + (Polygon[0, i+1])*(t**2)*(3 - 2*t) + (mk_list[0, i])*t*((1 - t)**2) + (mk_list[0, i+1])*(-(t**2)*(1-t))
+            Hrmt[1, i*T.size + t] = (Polygon[1, i])*((1 - t)**2)*(1 + 2*t) + (Polygon[1, i+1])*(t**2)*(3 - 2*t) + (mk_list[1, i])*t*((1 - t)**2) + (mk_list[1, i+1])*(-(t**2)*(1-t))
 
     return Hrmt
 
