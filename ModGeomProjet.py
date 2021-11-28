@@ -129,6 +129,9 @@ def Norm(vect):
 
 
 def WhatAreMoMn(Polygon,c):
+
+    if c == 1:
+        return np.array((0,0)),np.array((0,0))
     # Cas k
     if Polygon.shape[1] <= 1:
         return np.array((1,1)),np.array((1,1))
@@ -181,7 +184,10 @@ def PlotHermiteCurve(Polygon):
     N = len(Polygon[0, :])-1
     t = np.linspace(0,1,500)
 
+    # t = np.linspace(0,1,N*500) Pour Lagrange
+
     Spline = Hermite(N, t, m0, mn, c, Polygon)
+    #Courbure = courbure(N, t, m0, mn, c, Polygon)
     curve.set_xdata(Spline[0,:])
     curve.set_ydata(Spline[1,:])
     plt.draw()
@@ -190,6 +196,10 @@ def PlotHermiteCurve(Polygon):
 
 def Mk_List(N, m0, mn, c, Polygon):
     Liste = np.zeros((2, N+1))
+
+    if c == 1 :
+        return Liste
+
     Liste[0, 0] = m0[0]
     Liste[1, 0] = m0[1]
     Liste[0, N] = mn[0]
@@ -214,6 +224,23 @@ def Hermite(N, T, m0, mn, c, Polygon):
 
     return Hrmt
 
+
+def Aitken_Neville(t, N, T, Polygon):
+
+    Pkx = np.zeros((N + 1, N + 1))
+    Pky = np.zeros((N + 1, N + 1))
+
+    for i in range(N + 1):
+        Pkx[0, i] = Polygon[0, i]
+        Pky[0, i] = Polygon[1, i]
+
+    for k in range(1, N+1):
+        for i in range(N - k + 1):
+            Pkx[k, i] = ((T[i + k] - t)/(T[i + k] - t[i]))*Pkx[k - 1, i] + ((t - T[i])/(T[i + k] - T[i]))*Pkx[k - 1, i+1]
+            Pky[k, i] = ((T[i + k] - t)/(T[i + k] - t[i]))*Pky[k - 1, i] + ((t - T[i])/(T[i + k] - T[i]))*Pky[k - 1, i+1]
+
+    return 
+    
 
 def courbure(N, T, m0, mn, c, Polygon):
     
