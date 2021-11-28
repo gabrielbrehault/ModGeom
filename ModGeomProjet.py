@@ -137,6 +137,8 @@ def WhatAreMoMn(Polygon,c):
         mn = Polygon[:,1] - Polygon[:,0]
         return m0, mn
     choice = input('Voulez-vous choisir m0 et mn ? (Non/oui) : ')
+    P0 = Polygon[:,0]
+    Pn = Polygon[:,-1]
     if choice.lower() == 'oui':
         # Cas où on choisit m0 et mn
         print("Attention !!! Vos deux prochains clics sont importants !!!")
@@ -155,12 +157,10 @@ def WhatAreMoMn(Polygon,c):
             coord = plt.ginput(1, mouse_add=1, mouse_stop=3, mouse_pop=2)
         mnx = coord[0][0]
         mny = coord[0][1]
-        return np.array((m0x,m0y)), np.array((mnx,mny))
+        return np.array((m0x,m0y))-P0, np.array((mnx,mny))-Pn
     # Cas automatique
-    P0 = Polygon[:,0]
     P1 = Polygon[:,1]
     P2 = Polygon[:,2]
-    Pn = Polygon[:,-1]
     Pnm1 = Polygon[:,-2]
     Pnm2 = Polygon[:,-3]
     m1 = (1-c) / 2 * (P2 - P0)
