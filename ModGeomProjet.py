@@ -215,7 +215,21 @@ def Hermite(N, T, m0, mn, c, Polygon):
     return Hrmt
 
 
+def courbure(N, T, m0, mn, c, Polygon):
+    
+    mk_list = Mk_List(N, m0, mn, c, Polygon)
+    Courb = []
 
+    for i in range(N+1):
+        for k in range(T.size):
+            Courb.append(np.sqrt(((Polygon[0, i])*(2*(1 + 2*T[k]) - 8*(1 - T[k])) + (Polygon[0, i+1])*(2*(3 - 2*T[k]) - 8*T[k]) + (mk_list[0, i])*(-(4 * (1 - t)) + 2*t) + (mk_list[0, i+1])*(-(2*(1 - t)) + 4*t))**2 + 
+                                ((Polygon[1, i])*(2*(1 + 2*T[k]) - 8*(1 - T[k])) + (Polygon[1, i+1])*(2*(3 - 2*T[k]) - 8*T[k]) + (mk_list[1, i])*(-(4 * (1 - t)) + 2*t) + (mk_list[1, i+1])*(-(2*(1 - t)) + 4*t))**2))
+    
+    return Courb
+# H0 '' = 2*(1 + 2*t) - 8*(1 - t)
+# H1 '' = 2*(3 - 2*t) - 8*t
+# H2 '' = -(4 * (1 - t)) + 2*t
+# H3 '' = -(2*(1 - t)) + 4*t
 
 class Index(object):
 
