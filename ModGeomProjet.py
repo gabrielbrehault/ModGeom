@@ -221,11 +221,13 @@ class Index(object):
 
     def addPoint(self, event):
         Poly = AcquisitionNvxPoints(minmax,'or',':r')
-        PlotHermiteCurve(Poly)
+        if Poly.shape[1] >= 2:
+            PlotHermiteCurve(Poly)
         
     def removePoint(self, event):
         Poly = AcquisitionRMVPoints(minmax,'or',':r')
-        PlotHermiteCurve(Poly)
+        if Poly.shape[1] >= 2:
+            PlotHermiteCurve(Poly)
 
 
 callback = Index()
