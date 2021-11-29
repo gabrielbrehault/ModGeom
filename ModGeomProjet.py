@@ -182,6 +182,7 @@ def WhatAreMoMn(Polygon,c):
 
 
 def PlotHermiteCurve(Polygon):
+
     c = WhatIsC()
     m0, mn = WhatAreMoMn(Polygon, c)
 
@@ -192,7 +193,11 @@ def PlotHermiteCurve(Polygon):
 
     curve.set_xdata(Spline[0,:])
     curve.set_ydata(Spline[1,:])
-    # plt.draw()
+    return
+
+def DiscardHermiteCurve():
+    curve.set_xdata([0,0])
+    curve.set_ydata([0,0])
     return
 
 def PlotLagrangeCurve(Polygon):
@@ -203,9 +208,12 @@ def PlotLagrangeCurve(Polygon):
     Spline = Aitken_Neville_Boucle(N, t, Polygon)
     curve2.set_xdata(Spline[0,:])
     curve2.set_ydata(Spline[1,:])
-    # plt.draw()
     return
 
+def DiscardLagrangeCurve():
+    curve2.set_xdata([0,0])
+    curve2.set_ydata([0,0])
+    return
 
 def Mk_List(N, m0, mn, c, Polygon):
     Liste = np.zeros((2, N+1))
@@ -287,8 +295,10 @@ class Index(object):
             choice = input('Voulez-vous Hermite, Lagrange ou les deux ? (H/L/2) :')
             if choice.lower() == 'h' :
                 PlotHermiteCurve(Poly)
+                DiscardLagrangeCurve()
             elif choice.lower() == 'l' :
                 PlotLagrangeCurve(Poly)
+                DiscardHermiteCurve()
             else :
                 PlotHermiteCurve(Poly)
                 PlotLagrangeCurve(Poly)
@@ -300,8 +310,10 @@ class Index(object):
             choice = input('Voulez-vous Hermite, Lagrange ou les deux ? (H/L/2) :')
             if choice.lower() == 'h' :
                 PlotHermiteCurve(Poly)
+                DiscardLagrangeCurve()
             elif choice.lower() == 'l' :
                 PlotLagrangeCurve(Poly)
+                DiscardHermiteCurve()
             else :
                 PlotHermiteCurve(Poly)
                 PlotLagrangeCurve(Poly)
