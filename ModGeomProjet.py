@@ -191,6 +191,7 @@ def PlotHermiteCurve(Polygon):
     curve.set_xdata(Spline[0,:])
     curve.set_ydata(Spline[1,:])
     plt.draw()
+    courbure(N, m0, mn, c, Polygon) ### galère quand on trace lagrange et pleins d'autres trucs, il faut vérifier
     return
 
 
@@ -242,17 +243,29 @@ def Aitken_Neville(t, N, T, Polygon):
     return 
     
 
-def courbure(N, T, m0, mn, c, Polygon):
-    
+def courbure(N, m0, mn, c, Polygon):
     mk_list = Mk_List(N, m0, mn, c, Polygon)
-    Courb = []
-
-    for i in range(N+1):
-        for k in range(T.size):
-            Courb.append(np.sqrt(((Polygon[0, i])*(2*(1 + 2*T[k]) - 8*(1 - T[k])) + (Polygon[0, i+1])*(2*(3 - 2*T[k]) - 8*T[k]) + (mk_list[0, i])*(-(4 * (1 - t)) + 2*t) + (mk_list[0, i+1])*(-(2*(1 - t)) + 4*t))**2 + 
-                                ((Polygon[1, i])*(2*(1 + 2*T[k]) - 8*(1 - T[k])) + (Polygon[1, i+1])*(2*(3 - 2*T[k]) - 8*T[k]) + (mk_list[1, i])*(-(4 * (1 - t)) + 2*t) + (mk_list[1, i+1])*(-(2*(1 - t)) + 4*t))**2))
-    
-    return Courb
+    x = []
+    y = []
+    for k in range(N):
+        for t in range(10):
+            t /= 10
+            H0_prime = -2*(1-t)*(1+2*t)+2*(1-t)**2
+            H1_prime = 2*t*(3-2*t)-2*t**2
+            H2_prime = (1-t)**2-2*t*(1-t)
+            H3_prime = -2*t*(1-t)+t**2
+            H0_sec = 2*(1 + 2*t) - 8*(1 - t)
+            H1_sec = 2*(3 - 2*t) - 8*t
+            H2_sec = -(4 * (1 - t)) + 2*t
+            H3_sec = -(2*(1 - t)) + 4*t
+            P_k_prime = Polygon[:,k]*H0_prime + Polygon[:,k+1]*H1_prime + mk_list[:,k]*H2_prime + mk_list[:,k+1]*H3_prime
+            P_k_sec = Polygon[:,k]*H0_sec + Polygon[:,k+1]*H1_sec + mk_list[:,k]*H2_sec + mk_list[:,k+1]*H3_sec
+            prod_mix = P_k_prime[0]*P_k_sec[1] - P_k_prime[1]*P_k_sec[0]
+            x.append(t+k)
+            y.append(prod_mix/Norm(P_k_prime)**3)
+    plt.plot(x,y)
+    plt.show()
+    return
 # H0 '' = 2*(1 + 2*t) - 8*(1 - t)
 # H1 '' = 2*(3 - 2*t) - 8*t
 # H2 '' = -(4 * (1 - t)) + 2*t
@@ -264,6 +277,7 @@ class Index(object):
         Poly = AcquisitionNvxPoints(minmax,'or',':r')
         if Poly.shape[1] >= 2:
             PlotHermiteCurve(Poly)
+
         
     def removePoint(self, event):
         Poly = AcquisitionRMVPoints(minmax,'or',':r')
@@ -278,5 +292,7 @@ baddpoints = Button(axaddpoints, 'add Point')
 baddpoints.on_clicked(callback.addPoint)
 brempoints = Button(axrempoint, 'remove Point')
 brempoints.on_clicked(callback.removePoint)
+fig = plt.figure()
+graph = fig.add_subplot(111)
 plt.show()
 
