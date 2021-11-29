@@ -136,7 +136,6 @@ def Norm(vect):
 
 
 def WhatAreMoMn(Polygon,c):
-
     if c == 1:
         return np.array((0,0)),np.array((0,0))
     # Cas k
@@ -185,7 +184,6 @@ def WhatAreMoMn(Polygon,c):
 
 
 def PlotHermiteCurve(Polygon):
-
     c = WhatIsC()
     m0, mn = WhatAreMoMn(Polygon, c)
     N = len(Polygon[0, :])-1
