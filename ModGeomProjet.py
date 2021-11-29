@@ -197,9 +197,9 @@ def PlotHermiteCurve(Polygon):
     curve.set_xdata(Spline[0,:])
     curve.set_ydata(Spline[1,:])
     plt.draw()
-    choice = input("Voulez vous afficher la courbuure ? : (Non/oui) ")
+    choice = input("Voulez vous afficher la courbure ? : (Non/oui) ")
     if choice.lower() == "oui":
-        courbuure(N, m0, mn, c, Polygon)
+        courbure(N, m0, mn, c, Polygon)
     return
 
 def DiscardHermiteCurve():
@@ -222,18 +222,16 @@ def DiscardLagrangeCurve():
     curve2.set_ydata([0,0])
     return
 
+
 def Mk_List(N, m0, mn, c, Polygon):
     # retourne la liste des tangentes m_k
     Liste = np.zeros((2, N+1))
-
     if c == 1 :
         return Liste
-
     Liste[0, 0] = m0[0]
     Liste[1, 0] = m0[1]
     Liste[0, N] = mn[0]
     Liste[1, N] = mn[1]
-
     for i in range(1, N):
         Liste[0, i] = (1-c)*(Polygon[0, i+1] - Polygon[0, i-1])/2
         Liste[1, i] = (1-c)*(Polygon[1, i+1] - Polygon[1, i-1])/2
@@ -241,45 +239,40 @@ def Mk_List(N, m0, mn, c, Polygon):
 
 
 def Hermite(N, T, m0, mn, c, Polygon):
-    
+    # retourne la suite des points de la spline Hermite associée à Polygon
     mk_list = Mk_List(N, m0, mn, c, Polygon)
     Hrmt = np.zeros((2, N*T.size))
-
     for i in range(N):
         for k in range (T.size):
-            
             Hrmt[0, i*T.size + k] =  (Polygon[0, i])*((1 - T[k])**2)*(1 + 2*T[k]) + (Polygon[0, i+1])*(T[k]**2)*(3 - 2*T[k]) + (mk_list[0, i])*T[k]*((1 - T[k])**2) + (mk_list[0, i+1])*(-(T[k]**2)*(1-T[k]))
             Hrmt[1, i*T.size + k] =  (Polygon[1, i])*((1 - T[k])**2)*(1 + 2*T[k]) + (Polygon[1, i+1])*(T[k]**2)*(3 - 2*T[k]) + (mk_list[1, i])*T[k]*((1 - T[k])**2) + (mk_list[1, i+1])*(-(T[k]**2)*(1-T[k]))
-
     return Hrmt
 
 
 def Aitken_Neville(t, N, T, Polygon):
-
+    # retourne l'évalutaion en t du polynôme de Lagrange interpolant Polygon
     Pkx = np.zeros((N + 1, N + 1))
     Pky = np.zeros((N + 1, N + 1))
-
     for i in range(N + 1):
         Pkx[0, i] = Polygon[0, i]
         Pky[0, i] = Polygon[1, i]
-
     for k in range(1, N+1):
         for i in range(N - k + 1):
             Pkx[k, i] = ((i + k - t)/(i + k - i))*Pkx[k - 1, i] + ((t - i)/(i + k - i))*Pkx[k - 1, i+1]
             Pky[k, i] = ((i + k - t)/(i + k - i))*Pky[k - 1, i] + ((t - i)/(i + k - i))*Pky[k - 1, i+1]
-
     return Pkx[N, 0], Pky[N, 0]
     
+
 def Aitken_Neville_Boucle(N, T, Polygon):
-
+    # retourne la suite des évaluations du polynome de Lagrange interpolant Polygon
     A_N = np.zeros((2, T.size))
-
     for i in range(T.size):
         A_N[0, i], A_N[1, i] = Aitken_Neville(T[i], N, T, Polygon)
-
     return A_N
 
-def courbuure(N, m0, mn, c, Polygon):
+
+def courbure(N, m0, mn, c, Polygon):
+    # calcul la fonction courbure pour les splines hermites de Polygon
     mk_list = Mk_List(N, m0, mn, c, Polygon)
     x = []
     y = []
@@ -309,7 +302,7 @@ class Index(object):
 
     def addPoint(self, event):
         Poly = AcquisitionNvxPoints(minmax,'or',':r')
-        if Poly.shape[1] >= 2:
+        if Poly.shape[1] >= 2: # ce if permet de ne pas avoir à gérer les cas avec peu de points
             choice = input('Voulez-vous Hermite, Lagrange ou les deux ? (H/L/2) :')
             if choice.lower() == 'h' :
                 PlotHermiteCurve(Poly)
@@ -324,7 +317,7 @@ class Index(object):
         
     def removePoint(self, event):
         Poly = AcquisitionRMVPoints(minmax,'or',':r')
-        if Poly.shape[1] >= 2:
+        if Poly.shape[1] >= 2: # ce if permet de ne pas avoir à gérer les cas avec peu de points
             choice = input('Voulez-vous Hermite, Lagrange ou les deux ? (H/L/2) :')
             if choice.lower() == 'h' :
                 PlotHermiteCurve(Poly)
