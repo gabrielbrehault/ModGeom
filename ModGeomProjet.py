@@ -202,6 +202,7 @@ def PlotHermiteCurve(Polygon):
     return
 
 def DiscardHermiteCurve():
+    # curve devient une courbe avec 2 points de coordonnées (0,0), ce qui revient à faire "disparaître" curve
     curve.set_xdata([0,0])
     curve.set_ydata([0,0])
     return
@@ -217,6 +218,7 @@ def PlotLagrangeCurve(Polygon):
     return
 
 def DiscardLagrangeCurve():
+    # curve2 devient une courbe avec 2 points de coordonnées (0,0), ce qui revient à faire "disparaître" curve2
     curve2.set_xdata([0,0])
     curve2.set_ydata([0,0])
     return
