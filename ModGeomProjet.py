@@ -98,7 +98,7 @@ def WhatAreMoMn(Polygon,c):
         # Cas où on choisit m0 et mn
         print("Attention !!! Vos deux prochains clics sont importants !!!")
         print("Votre 1er lieu de clic sera le bout d'un vecteur partant de votre P0")
-        print("Ce vecteur sera la tangente en P0 de la courbue")
+        print("Ce vecteur sera la tangente en P0 de la courbure")
         print("Votre second clic fera presque la même chose mais en Pn")
         coord = []
         while coord == []:
@@ -139,7 +139,7 @@ def PlotHermiteCurve(Polygon):
     curve.set_ydata(Spline[1,:])
     plt.draw()
     choice = input("Voulez vous afficher la courbure ? : (Non/oui) ")
-    # ici nous laissons le choix de faire apparaître la fonction de coubure
+    # ici nous laissons le choix de faire apparaître la fonction de courbure
     if choice.lower() == "oui":
         courbure(N, m0, mn, c, Polygon)
     return
@@ -155,7 +155,7 @@ def DiscardHermiteCurve():
 def PlotLagrangeCurve(Polygon):
     N = len(Polygon[0, :])-1
     # on échantillone le t de telle sorte qu'il y ait toujours autant de points (500) entre deux points de Polygon à interpoler,
-    # pour conserver la qualité indépendamment de N le nompbre de points de Polygon
+    # pour conserver la qualité indépendamment de N le nombre de points de Polygon
     t = np.linspace(0,N,N*500)  
     Spline = Aitken_Neville_Boucle(N, t, Polygon)
     curve2.set_xdata(Spline[0,:])
@@ -196,7 +196,7 @@ def Hermite(N, T, m0, mn, c, Polygon):
 
 
 def Aitken_Neville(t, N, T, Polygon):
-    # retourne l'évalutaion en t du polynôme de Lagrange interpolant Polygon
+    # retourne l'évaluation en t du polynôme de Lagrange interpolant Polygon
     Pkx = np.zeros((N + 1, N + 1))
     Pky = np.zeros((N + 1, N + 1))
     for i in range(N + 1):
@@ -210,7 +210,7 @@ def Aitken_Neville(t, N, T, Polygon):
     
 
 def Aitken_Neville_Boucle(N, T, Polygon):
-    # retourne la suite des évaluations du polynome de Lagrange interpolant Polygon
+    # retourne la suite des évaluations du polynôme de Lagrange interpolant Polygon
     A_N = np.zeros((2, T.size))
     for i in range(T.size):
         A_N[0, i], A_N[1, i] = Aitken_Neville(T[i], N, T, Polygon)
@@ -218,7 +218,7 @@ def Aitken_Neville_Boucle(N, T, Polygon):
 
 
 def courbure(N, m0, mn, c, Polygon):
-    # calcul la fonction courbure pour les splines hermites de Polygon
+    # calcul la fonction courbure pour les splines Hermite de Polygon
     mk_list = Mk_List(N, m0, mn, c, Polygon)
     x = []
     y = []
