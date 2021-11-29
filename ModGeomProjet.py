@@ -188,36 +188,38 @@ def PlotHermiteCurve(Polygon):
 
     c = WhatIsC()
     m0, mn = WhatAreMoMn(Polygon, c)
-
     N = len(Polygon[0, :])-1
     t = np.linspace(0,1,500)
-
-    Spline = Hermite(N, t, m0, mn, c, Polygon)
-
+    Spline = Hermite(N, t, m0, mn, c, Polygon)  # Hermite retourne une matrice des coordonnées de la spline
     curve.set_xdata(Spline[0,:])
     curve.set_ydata(Spline[1,:])
     plt.draw()
     choice = input("Voulez vous afficher la courbure ? : (Non/oui) ")
+    # ici nous laissons le choix de faire apparaître la fonction de coubure
     if choice.lower() == "oui":
         courbure(N, m0, mn, c, Polygon)
     return
 
+
 def DiscardHermiteCurve():
+    # curve devient une courbe avec 2 points de coordonnées (0,0), ce qui revient à faire "disparaître" curve
     curve.set_xdata([0,0])
     curve.set_ydata([0,0])
     return
 
+
 def PlotLagrangeCurve(Polygon):
-
     N = len(Polygon[0, :])-1
+    # on échantillone le t de telle sorte qu'il y ait toujours autant de points (500) entre deux points de Polygon à interpoler,
+    # pour conserver la qualité indépendamment de N le nompbre de points de Polygon
     t = np.linspace(0,N,N*500)  
-
     Spline = Aitken_Neville_Boucle(N, t, Polygon)
     curve2.set_xdata(Spline[0,:])
     curve2.set_ydata(Spline[1,:])
     return
 
 def DiscardLagrangeCurve():
+    # curve2 devient une courbe avec 2 points de coordonnées (0,0), ce qui revient à faire "disparaître" curve2
     curve2.set_xdata([0,0])
     curve2.set_ydata([0,0])
     return
