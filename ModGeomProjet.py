@@ -188,15 +188,14 @@ def PlotHermiteCurve(Polygon):
 
     c = WhatIsC()
     m0, mn = WhatAreMoMn(Polygon, c)
-
     N = len(Polygon[0, :])-1
     t = np.linspace(0,1,500)
 
-    Spline = Hermite(N, t, m0, mn, c, Polygon)
-
+    Spline = Hermite(N, t, m0, mn, c, Polygon)  # Hermite retourne une matrice des coordonnées de la spline
     curve.set_xdata(Spline[0,:])
     curve.set_ydata(Spline[1,:])
     plt.draw()
+    # ici nous laissons le choix de faire apparaître la fonction de coubure
     choice = input("Voulez vous afficher la courbuure ? : (Non/oui) ")
     if choice.lower() == "oui":
         courbuure(N, m0, mn, c, Polygon)
