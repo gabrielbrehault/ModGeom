@@ -21,7 +21,6 @@ points, = plt.plot([], [], 'bx')
 poly, = plt.plot([], 'r')
 curve, = plt.plot([], 'g')
 
-############
 # Ajout de variables
 curve2, = plt.plot([], 'pink')
 courbu, = plt.plot([],[],'blue')
@@ -43,7 +42,6 @@ def AcquisitionNvxPoints(minmax,color1,color2):
             y = np.append(y, yy)
             poly.set_xdata(points.get_xdata())
             poly.set_ydata(points.get_ydata())
-    #Polygon creation
     Polygon = np.zeros((2,len(x)))
     Polygon[0,:] = x
     Polygon[1,:] = y
@@ -68,17 +66,11 @@ def AcquisitionRMVPoints(minmax,color1,color2):
             y = np.delete(y, index_min)
             poly.set_xdata(points.get_xdata())
             poly.set_ydata(points.get_ydata())
-    #Polygon creation
     Polygon = np.zeros((2,len(x)))
     Polygon[0,:] = x
     Polygon[1,:] = y
     return Polygon
 
-
-
-
-
-#notre travail
 
 def WhatIsC():
     print("Merci de retourner une valeur appartenant à [0;1]")
