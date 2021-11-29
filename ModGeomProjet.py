@@ -24,6 +24,9 @@ curve, = plt.plot([], 'g')
 ############
 # Ajout de variable
 curve2, = plt.plot([], 'pink')
+courb, = plt.plot([],[],'blue')
+
+
 
 #-----------
 #factorial n
@@ -278,8 +281,8 @@ def courbure(N, m0, mn, c, Polygon):
     x = []
     y = []
     for k in range(N):
-        for t in range(10):
-            t /= 10
+        for t in range(100):
+            t /= 100
             H0_prime = -2*(1-t)*(1+2*t)+2*(1-t)**2
             H1_prime = 2*t*(3-2*t)-2*t**2
             H2_prime = (1-t)**2-2*t*(1-t)
@@ -293,8 +296,9 @@ def courbure(N, m0, mn, c, Polygon):
             prod_mix = P_k_prime[0]*P_k_sec[1] - P_k_prime[1]*P_k_sec[0]
             x.append(t+k)
             y.append(prod_mix/Norm(P_k_prime)**3)
-    plt.plot(x,y)
-    plt.show()
+    courb.set_xdata(x)
+    courb.set_ydata(y)
+    plt.draw()
     return
 # H0 '' = 2*(1 + 2*t) - 8*(1 - t)
 # H1 '' = 2*(3 - 2*t) - 8*t
@@ -341,7 +345,5 @@ baddpoints = Button(axaddpoints, 'add Point')
 baddpoints.on_clicked(callback.addPoint)
 brempoints = Button(axrempoint, 'remove Point')
 brempoints.on_clicked(callback.removePoint)
-fig = plt.figure()
-graph = fig.add_subplot(111)
 plt.show()
 
