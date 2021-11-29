@@ -24,7 +24,7 @@ curve, = plt.plot([], 'g')
 ############
 # Ajout de variable
 curve2, = plt.plot([], 'pink')
-courb, = plt.plot([],[],'blue')
+courbu, = plt.plot([],[],'blue')
 
 
 
@@ -153,7 +153,7 @@ def WhatAreMoMn(Polygon,c):
         # Cas où on choisit m0 et mn
         print("Attention !!! Vos deux prochains clics sont importants !!!")
         print("Votre 1er lieu de clic sera le bout d'un vecteur partant de votre P0")
-        print("Ce vecteur sera la tangente en P0 de la courbe")
+        print("Ce vecteur sera la tangente en P0 de la courbue")
         print("Votre second clic fera presque la même chose mais en Pn")
         coord = []
         while coord == []:
@@ -197,7 +197,9 @@ def PlotHermiteCurve(Polygon):
     curve.set_xdata(Spline[0,:])
     curve.set_ydata(Spline[1,:])
     plt.draw()
-    courbure(N, m0, mn, c, Polygon) ### galère quand on trace lagrange et pleins d'autres trucs, il faut vérifier
+    choice = input("Voulez vous afficher la courbuure ? : (Non/oui) ")
+    if choice.lower() == "oui":
+        courbuure(N, m0, mn, c, Polygon)
     return
 
 def DiscardHermiteCurve():
@@ -221,6 +223,7 @@ def DiscardLagrangeCurve():
     return
 
 def Mk_List(N, m0, mn, c, Polygon):
+    # retourne la liste des tangentes m_k
     Liste = np.zeros((2, N+1))
 
     if c == 1 :
@@ -276,13 +279,13 @@ def Aitken_Neville_Boucle(N, T, Polygon):
 
     return A_N
 
-def courbure(N, m0, mn, c, Polygon):
+def courbuure(N, m0, mn, c, Polygon):
     mk_list = Mk_List(N, m0, mn, c, Polygon)
     x = []
     y = []
     for k in range(N):
-        for t in range(100):
-            t /= 100
+        for t in range(1000):
+            t /= 1000
             H0_prime = -2*(1-t)*(1+2*t)+2*(1-t)**2
             H1_prime = 2*t*(3-2*t)-2*t**2
             H2_prime = (1-t)**2-2*t*(1-t)
@@ -296,14 +299,11 @@ def courbure(N, m0, mn, c, Polygon):
             prod_mix = P_k_prime[0]*P_k_sec[1] - P_k_prime[1]*P_k_sec[0]
             x.append(t+k)
             y.append(prod_mix/Norm(P_k_prime)**3)
-    courb.set_xdata(x)
-    courb.set_ydata(y)
+    courbu.set_xdata(x)
+    courbu.set_ydata(y)
     plt.draw()
     return
-# H0 '' = 2*(1 + 2*t) - 8*(1 - t)
-# H1 '' = 2*(3 - 2*t) - 8*t
-# H2 '' = -(4 * (1 - t)) + 2*t
-# H3 '' = -(2*(1 - t)) + 4*t
+
 
 class Index(object):
 
