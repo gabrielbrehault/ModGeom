@@ -22,55 +22,9 @@ poly, = plt.plot([], 'r')
 curve, = plt.plot([], 'g')
 
 ############
-# Ajout de variable
+# Ajout de variables
 curve2, = plt.plot([], 'pink')
 courbu, = plt.plot([],[],'blue')
-
-
-
-#-----------
-#factorial n
-def fact(n):
-    res = 1
-    for i in range(n):
-        res *= (i+1)
-    return res
-
-#----------------------
-# Binomial coefficient
-def nchoosek(n,k):
-    return fact(n)/(fact(k)*fact(n-k))
-
-#---------------------
-# Bernstein Polynomials
-# N is the degree
-# t = np.linspace(0,1,500)
-def Bernstein(N,t):
-    BNt = np.zeros((N+1, t.size))
-    for i in range(N+1):
-         BNt[i, :] = (nchoosek(N, i)*(t**i)*(1-t)**(N-i) )  
-    return BNt
-
-#----------------------
-# plot of the Bernstein polynomials
-def plotBernPoly():
-    N=5
-    x = np.linspace(0,1,500)
-    Bern = Bernstein(N,x)
-    for k in range(N+1):
-        plt.plot(x,Bern[k, :])
-
-#--------------------------
-# plot of the Bezier curve
-def PlotBezierCurve(Polygon):
-    N = len(Polygon[0, :])-1
-    t = np.linspace(0,1,500)
-    Bern = Bernstein(N, t)
-    Bezier = Polygon @ Bern
-    curve.set_xdata(Bezier[0,:])
-    curve.set_ydata(Bezier[1,:])
-    plt.draw()
-    return
 
 
 def AcquisitionNvxPoints(minmax,color1,color2):
